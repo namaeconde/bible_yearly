@@ -73,7 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   'assets/home/welcome_image.svg',
                   semanticsLabel: 'Welcome Image'
               ),
-            )
+            ),
+            const Text(
+              "Today's reading is in",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                letterSpacing: 0.27,
+                color: AppTheme.textColor,
+              ),
+            ),
           ],
         )
       )
