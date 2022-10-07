@@ -1,3 +1,4 @@
+import 'package:bible_yearly/components/app_bar_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bible_yearly/app_theme.dart';
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
         body: Column(
           children: <Widget>[
-            getAppBarUI("Good morning!"),
+            const AppBarUI(text: "Good morning!"),
             Container(
               constraints: const BoxConstraints(maxWidth: 350, maxHeight: 250),
               child: SvgPicture.asset(
@@ -76,41 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         )
       )
-    );
-  }
-
-  Widget getAppBarUI(final String text) {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: MediaQuery.of(context).padding.top,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      text,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 55,
-                        letterSpacing: 0.27,
-                        color: AppTheme.textColor,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        )
-      ],
     );
   }
 }
