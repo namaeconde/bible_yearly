@@ -57,36 +57,111 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  final double infoHeight = 364.0;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.backgroundColor,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
+    final double tempHeight = MediaQuery.of(context).size.height -
+        (MediaQuery.of(context).size.width / 1.2) +
+        24.0;
+    return Scaffold(
+        backgroundColor: AppTheme.backgroundColor,
+        body: Stack(
           children: <Widget>[
-            const AppBarUI(text: "Good morning!"),
-            Container(
-              constraints: const BoxConstraints(maxWidth: 350, maxHeight: 250),
-              child: SvgPicture.asset(
-                  'assets/home/welcome_image.svg',
-                  semanticsLabel: 'Welcome Image'
+            Column(children: <Widget>[
+              AspectRatio(
+                aspectRatio: 1.2,
+                child: SvgPicture.asset(
+                    'assets/home/welcome_image.svg',
+                    semanticsLabel: 'Welcome Image'
+                ),
               ),
-            ),
-            const Text(
-              "Today's reading is in",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                letterSpacing: 0.27,
-                color: AppTheme.textColor,
+            ]),
+            Positioned(
+              top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        offset: const Offset(1.1, 1.1),
+                        blurRadius: 10.0),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: SingleChildScrollView(
+                    child: Container(
+                      constraints: BoxConstraints(
+                          minHeight: infoHeight,
+                          maxHeight: tempHeight > infoHeight
+                              ? tempHeight
+                              : infoHeight),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.only(
+                                top: 32.0, left: 18, right: 16),
+                            child: Text(
+                              "Today's reading is in",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 21,
+                                color: AppTheme.textColor,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, right: 16, top: 8, bottom: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const <Widget>[
+                                  Text(
+                                      'Isaiah 20 - 22',
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 40,
+                                        letterSpacing: 0.27,
+                                        color: AppTheme.textColor,
+                                      )
+                                  ),
+                                  Text(
+                                      'Ephesians 4',
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 40,
+                                        letterSpacing: 0.27,
+                                        color: AppTheme.textColor,
+                                      )
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).padding.bottom,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+            )
+          ]
         )
-      )
     );
   }
 }
