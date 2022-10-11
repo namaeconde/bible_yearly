@@ -1,4 +1,3 @@
-import 'package:bible_yearly/components/app_bar_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bible_yearly/app_theme.dart';
@@ -155,6 +154,27 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                           )
                         ],
                       ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: (MediaQuery.of(context).size.width / 1.2) - 24.0 - 35,
+              right: 35,
+              child: Card(
+                color: AppTheme.buttonColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0)),
+                elevation: 10.0,
+                child: const SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: Center(
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 30,
                     ),
                   ),
                 ),
