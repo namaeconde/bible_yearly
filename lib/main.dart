@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       textAlign: TextAlign.justify,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 40,
+                                        fontSize: 30,
                                         letterSpacing: 0.27,
                                         color: AppTheme.textColor,
                                       )
@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       textAlign: TextAlign.justify,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 40,
+                                        fontSize: 30,
                                         letterSpacing: 0.27,
                                         color: AppTheme.textColor,
                                       )
