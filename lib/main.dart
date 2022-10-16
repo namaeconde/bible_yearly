@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bible_yearly/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'dart:convert';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,12 +60,31 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final double infoHeight = 364.0;
+  List _readings = [];
+
+  // Fetch content from the json file
+  Future<void> readJson() async {
+    final currentMonth = DateFormat.MMMM().format(DateTime.now()).toLowerCase();
+    final String response = await rootBundle.loadString('assets/files/$currentMonth.json');
+    final data = await json.decode(response);
+    setState(() {
+      _readings = data;
+    });
+  }
+
+  @override
+  void initState() {
+    readJson();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
+    final currentDay = DateTime.now().day;
+    final currentReading = _readings.isNotEmpty ? _readings[currentDay] : {};
     return Scaffold(
         backgroundColor: AppTheme.backgroundColor,
         body: Stack(
@@ -118,17 +139,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
-                          Expanded(
+                          _readings.isNotEmpty ? Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 16, right: 16, top: 8, bottom: 8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Text(
-                                      'Isaiah 20 - 22',
+                                      currentReading["Old Testament"],
                                       textAlign: TextAlign.justify,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 30,
                                         letterSpacing: 0.27,
@@ -136,9 +157,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       )
                                   ),
                                   Text(
-                                      'Ephesians 4',
+                                      currentReading["New Testament"],
                                       textAlign: TextAlign.justify,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 30,
                                         letterSpacing: 0.27,
@@ -148,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 ],
                               ),
                             ),
-                          ),
+                          ) : Container(),
                           SizedBox(
                             height: MediaQuery.of(context).padding.bottom,
                           )
