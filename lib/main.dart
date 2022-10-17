@@ -4,6 +4,7 @@ import 'package:bible_yearly/app_theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,21 +62,45 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final double infoHeight = 364.0;
   List _readings = [];
+  String _oldTestament = "";
+  String _newTestament = "";
+  late Timer _everDay;
+  late Timer _everyMonth;
 
   // Fetch content from the json file
   Future<void> readJson() async {
+    debugPrint("Reading JSON");
     final currentMonth = DateFormat.MMMM().format(DateTime.now()).toLowerCase();
     final String response = await rootBundle.loadString('assets/files/$currentMonth.json');
     final data = await json.decode(response);
     setState(() {
       _readings = data;
+      getReadings();
+    });
+  }
+
+  Future<void> getReadings() async {
+    debugPrint("Get Readings");
+    final currentDay = DateTime.now().day - 1;
+    final currentReading = _readings.isNotEmpty ? _readings[currentDay] : { "Old Testament" : "", "New Testament": ""};
+    setState(() {
+      _oldTestament = currentReading["Old Testament"];
+      _newTestament = currentReading["New Testament"];
     });
   }
 
   @override
   void initState() {
-    readJson();
     super.initState();
+    readJson();
+
+    _everyMonth = Timer.periodic(const Duration(days: 20), (Timer t) async {
+      readJson();
+    });
+
+    _everDay = Timer.periodic(const Duration(minutes: 30), (Timer t) async {
+      getReadings();
+    });
   }
 
   @override
@@ -83,8 +108,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final double tempHeight = MediaQuery.of(context).size.height -
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
-    final currentDay = DateTime.now().day;
-    final currentReading = _readings.isNotEmpty ? _readings[currentDay] : {};
     return Scaffold(
         backgroundColor: AppTheme.backgroundColor,
         body: Stack(
@@ -147,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                      currentReading["Old Testament"],
+                                      _oldTestament,
                                       textAlign: TextAlign.justify,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
@@ -157,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                       )
                                   ),
                                   Text(
-                                      currentReading["New Testament"],
+                                      _newTestament,
                                       textAlign: TextAlign.justify,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w700,
