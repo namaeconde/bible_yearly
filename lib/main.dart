@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:bible_yearly/app_theme.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:home_widget/home_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +16,30 @@ void main() async {
     DeviceOrientation.portraitDown
   ]).then((_) => runApp(const MyApp()));
 }
+
+/// Called when Doing Background Work initiated from Widget
+void backgroundCallback(Uri data) async {
+  print(data);
+
+  if (data.host == 'titleclicked') {
+    final greetings = [
+      'Hello',
+      'Hallo',
+      'Bonjour',
+      'Hola',
+      'Ciao',
+      '哈洛',
+      '안녕하세요',
+      'xin chào'
+    ];
+    final selectedGreeting = greetings[Random().nextInt(greetings.length)];
+
+    await HomeWidget.saveWidgetData<String>('title', selectedGreeting);
+    await HomeWidget.updateWidget(
+        name: 'HomeWidgetExampleProvider', iOSName: 'HomeWidgetExample');
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -79,6 +106,32 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> _sendData() async {
+    try {
+      Future.wait([
+        HomeWidget.saveWidgetData<String>('old_testament', _oldTestament),
+        HomeWidget.saveWidgetData<String>('new_testament', _newTestament),
+      ]);
+    } on PlatformException catch (exception) {
+      debugPrint('Error Sending Data. $exception');
+    }
+  }
+
+  Future<void> _updateWidget() async {
+    try {
+      HomeWidget.updateWidget(
+          name: 'HomeWidgetExampleProvider', iOSName: 'HomeWidgetExample');
+    } on PlatformException catch (exception) {
+      debugPrint('Error Updating Widget. $exception');
+    }
+  }
+
+  Future<void> sendAndUpdate() async {
+    debugPrint("Send data and update widget");
+    await _sendData();
+    await _updateWidget();
+  }
+
   Future<void> getReadings() async {
     debugPrint("Get Readings");
     final currentDay = DateTime.now().day - 1;
@@ -86,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       _oldTestament = currentReading["Old Testament"];
       _newTestament = currentReading["New Testament"];
+      sendAndUpdate();
     });
   }
 
@@ -93,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     readJson();
-
+    
     _everyMonth = Timer.periodic(const Duration(days: 20), (Timer t) async {
       readJson();
     });
