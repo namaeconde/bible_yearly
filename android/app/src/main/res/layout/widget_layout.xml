@@ -13,7 +13,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
         android:textColor="#FF00394C"
         android:text="Today's reading is in"/>
 
@@ -21,7 +22,7 @@
         android:id="@+id/old_testament"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#FF00394C"/>
 
@@ -29,7 +30,7 @@
         android:id="@+id/new_testament"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#FF00394C"/>
 </LinearLayout>
